@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getCurrentChannel, sendMessage } from "@utils/discord.jsx";
+import { getCurrentChannel, insertTextIntoChatInputBox } from "@utils/discord.jsx";
 import definePlugin from "@utils/types";
 import { ExpressionPickerStore } from "@webpack/common";
 
@@ -42,7 +42,6 @@ export default definePlugin({
             replace: '"handleSelectGIF",$1=>{if (!this.props.className) return $self.handleSelect($1);'
         }
     }],
-
     handleSelect(gif?: { url: string; }) {
         if (gif) {
 
@@ -51,17 +50,17 @@ export default definePlugin({
                 return;
             }
             if (!gif.url.match("tenor.com")) {
-                sendMessage(channel, {
-                    content: gif.url
-                });
+                insertTextIntoChatInputBox(gif.url);
                 ExpressionPickerStore.closeExpressionPicker();
                 return;
             }
             const fixed_gif_url = get_raw_gif(gif.url);
+            if (!fixed_gif_url) {
+                return;
+            }
+            insertTextIntoChatInputBox(fixed_gif_url);
             ExpressionPickerStore.closeExpressionPicker();
-            sendMessage(channel, {
-                content: fixed_gif_url
-            });
+
         }
     }
 });
