@@ -6,8 +6,12 @@
 
 export function get_raw_gif(url: string) {
     const regex_match = url.match(/gif-(\d+)/);
+    const regex_match2 = url.match(/https:\/\/tenor\.com\/view\/\d+/);
+    if (regex_match2) {
+        return url;
+    }
     if (!regex_match) {
-        // return error
+        //  error
         return;
     }
     console.log(url, regex_match);
